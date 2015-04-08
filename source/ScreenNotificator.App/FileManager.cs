@@ -22,11 +22,17 @@ namespace ScreenNotificator.App
 			return internalFilePath;
 		}
 
-
-		private static string CreateInternalFolder(string folderName)
+		public static string GetAssemblyFolder()
 		{
 			var assembyPath = Assembly.GetExecutingAssembly().GetName().CodeBase;
 			var assemblyFolder = Path.GetDirectoryName(assembyPath).Replace(@"file:\", "");
+
+			return assemblyFolder;
+		}
+
+		private static string CreateInternalFolder(string folderName)
+		{
+			var assemblyFolder = FileManager.GetAssemblyFolder();
 
 			var internalFolderPath = string.Format("{0}\\{1}", assemblyFolder, folderName);
 

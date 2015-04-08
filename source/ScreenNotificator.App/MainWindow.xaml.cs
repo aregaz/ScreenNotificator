@@ -45,6 +45,12 @@ namespace ScreenNotificator.App
 			if (!string.IsNullOrWhiteSpace(filePath))
 			{
 				LockScreenManager.ChangeLockScreenImage(filePath);
+
+				var image = ImageManager.LoadImage(filePath);
+				image.DrawNotificationArea();
+
+				var imageFolder = string.Format("{0}\\Images", FileManager.GetAssemblyFolder());
+				image.SaveImage(imageFolder, "testImage.jpg");
 			}
 		}
 	}
