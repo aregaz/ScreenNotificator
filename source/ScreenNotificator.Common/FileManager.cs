@@ -8,9 +8,15 @@ namespace ScreenNotificator.Common
 		public static string CopyExternalFileToAssemblyFolder(string externalFilePath)
 		{
 			var originalFileName = Path.GetFileName(externalFilePath);
+			var originalFileExtension = Path.GetExtension(externalFilePath);
 
 			var internalFolderPath = FileManager.CreateInternalFolder("Images");
-			var internalFilePath = string.Format("{0}\\{1}", internalFolderPath, originalFileName);
+			var internalFilePath = string.Format("{0}\\original.{1}", internalFolderPath, originalFileExtension);
+
+			if (File.Exists(internalFilePath))
+			{
+				File.Delete(internalFilePath);
+			}
 
 			File.Copy(externalFilePath, internalFilePath);
 

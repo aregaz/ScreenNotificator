@@ -9,38 +9,22 @@ namespace ScreenNotificator.Common.Models
 		public string FilePath { get; set; }
 		public Image Image { get; set; }
 
-		public LockScreenImage(string filePath)
+		public NotificationCanvas NotificationCanvas { get; set; }
+
+		public LockScreenImage(string filePath, ScreenResolution screenResolution)
 		{
 			this.FilePath = filePath;
-			this.LoadImage(this.FilePath);
-		}
 
-		private void LoadImage(string filePath)
-		{
 			var image = Image.FromFile(filePath);
-			this.Image = image;
+			this.Image = ImageEditor.ScaleImage(
+				image,
+				screenResolution.Width,
+				screenResolution.Height); ;
 		}
 
 		public void DrawNotificationArea()
 		{
-			this.DrawNotificationArea(this.Image);
-		}
-
-		private void DrawNotificationArea(Image bmp)
-		{
-			var backgroundBrush = new SolidBrush(Color.FromArgb(128, 239, 241, 246));
-
-			using (var graphics = Graphics.FromImage(bmp))
-			{
-				var notificationArea = new NotificationArea(bmp.Width, bmp.Height);
-				var notificationAreaRectangle = new Rectangle(
-					notificationArea.X,
-					notificationArea.Y,
-					notificationArea.Width,
-					notificationArea.Height);
-
-				graphics.FillRectangle(backgroundBrush, notificationAreaRectangle);
-			}
+			ImageEditor.DrawNotificationArea(this.Image);
 		}
 
 		public void SaveImage(string folder, string fileName = null)
