@@ -90,8 +90,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FileManager.cs" />
-    <Compile Include="ImageManager.cs" />
     <Compile Include="LockScreenManager.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -124,6 +122,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ScreenNotificator.Common\ScreenNotificator.Common.csproj">
+      <Project>{6593bda3-ac16-4a1c-ba72-f105faf2715d}</Project>
+      <Name>ScreenNotificator.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

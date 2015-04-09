@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 
-namespace ScreenNotificator.App
+namespace ScreenNotificator.Common.Models
 {
 	public class LockScreenImage : IDisposable
 	{

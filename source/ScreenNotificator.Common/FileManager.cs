@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace ScreenNotificator.App
+namespace ScreenNotificator.Common
 {
 	public class FileManager
 	{

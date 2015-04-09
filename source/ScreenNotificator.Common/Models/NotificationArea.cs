@@ -1,4 +1,4 @@
-﻿namespace ScreenNotificator.App
+﻿namespace ScreenNotificator.Common.Models
 {
 	public class NotificationArea
 	{

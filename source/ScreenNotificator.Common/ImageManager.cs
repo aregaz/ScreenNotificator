@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using ScreenNotificator.Common.Models;
 
-namespace ScreenNotificator.App
+namespace ScreenNotificator.Common
 {
 	public class ImageManager
 	{
