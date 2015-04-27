@@ -34,7 +34,8 @@ namespace ScreenNotificator.Common
 				var notificationArea = new NotificationArea(bmp.Width, bmp.Height);
 				var notificationCanvas = new NotificationCanvas(
 					notificationArea.Width,
-					notificationArea.Height);
+					notificationArea.Height,
+					"Тут будуть ваші події для нагадування");
 				graphics.DrawImage(
 					notificationCanvas.Image,
 					new PointF(notificationArea.X, notificationArea.Y));

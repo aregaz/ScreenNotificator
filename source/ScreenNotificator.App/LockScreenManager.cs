@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Windows.Storage;
 using Windows.System.UserProfile;
 using ScreenNotificator.Common;
@@ -18,7 +19,14 @@ namespace ScreenNotificator.App
 
 			LockScreen.SetImageFileAsync(image).AsTask().Wait();
 
-			//var originalImage = LockScreen.OriginalImageFile;
+			var originalImage = LockScreen.OriginalImageFile;
+
+			if (Path.GetFullPath(originalImage.AbsolutePath).ToLower()
+				 != Path.GetFullPath(internalFilePath).ToLower())
+			{
+				// lock screen image has not been chenged
+				throw new UnableToChangeLockScreenException();
+			}
 		}
 	}
 }

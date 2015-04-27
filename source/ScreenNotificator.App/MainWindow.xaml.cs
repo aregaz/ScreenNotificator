@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using Microsoft.Win32;
 using System.ComponentModel;
 using System.Windows;
 
@@ -40,7 +41,20 @@ namespace ScreenNotificator.App
 
 			if (!string.IsNullOrWhiteSpace(filePath))
 			{
-				LockScreenManager.ChangeLockScreenImage(filePath);
+				try
+				{
+					LockScreenManager.ChangeLockScreenImage(filePath);
+				}
+				catch (Exception exception)
+				{
+					MessageBox.Show(
+						exception.Message,
+						"Error",
+						MessageBoxButton.OK,
+						MessageBoxImage.Error);
+				}
+
+				
 
 				var image = ImageManager.LoadImage(filePath, this.screenResolution);
 				image.DrawNotificationArea();
