@@ -7,7 +7,7 @@
 		public int Top { get; set; }
 		public int Bottom { get; set; }
 
-		public ThickEdge(int left, int top, int right, int bottom)
+		public ThickEdge(int left = 0, int top = 0, int right = 0, int bottom = 0)
 		{
 			this.Left = left;
 			this.Right = right;
