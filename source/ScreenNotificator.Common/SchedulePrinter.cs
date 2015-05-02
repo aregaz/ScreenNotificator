@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using ScreenNotificator.Common.Models;
 using ScreenNotificator.Common.Models.Calendar;
 
@@ -19,7 +20,7 @@ namespace ScreenNotificator.Common
 		public Brush EventLocationBrush { get; set; }
 
 		public ThickEdge GlobalPadding { get; set; }
-		public ThickEdge TitlePadding { get; set; }
+		public ThickEdge DayTitlePadding { get; set; }
 		public ThickEdge EventPadding { get; set; }
 
 		public SchedulePrinter()
@@ -67,24 +68,96 @@ namespace ScreenNotificator.Common
 			this.EventLocationBrush = eventLocationBrush;
 
 			this.GlobalPadding = new ThickEdge(15);
-			this.TitlePadding = new ThickEdge(left: 15, right: 15);
-			this.EventPadding = new ThickEdge(left: 10);
+			this.DayTitlePadding = new ThickEdge(bottom: 25);
+			this.EventPadding = new ThickEdge(left: 15, bottom: 5);
 		}
 
-		public void Print(Image image, Schedule schedule)
+		public void Print(Schedule schedule, Image image, ThickEdge imagePadding = null)
 		{
+			if (imagePadding == null)
+			{
+				imagePadding = new ThickEdge();
+			}
+
 			using (var graphics = Graphics.FromImage(image))
 			{
-				graphics.DrawString(
-					"Schedule",
-					this.DayNameFont,
-					this.DayNameBrush,
-					new RectangleF(
-						(float)this.GlobalPadding.Left,
-						(float)this.GlobalPadding.Top,
-						(float)(image.Width - this.GlobalPadding.Left),
-						(float)(image.Height - this.GlobalPadding.Left))
-					);
+				var daysShift = 0;
+				var eventsShift = 0;
+
+				foreach (var workDay in schedule.Days)
+				{
+					eventsShift = 0;
+
+					// draw day title:
+					var dayTextToPrint = workDay.Date.ToLongDateString();
+					var dayPrintedSize = graphics.MeasureString(
+						dayTextToPrint,
+						this.DayNameFont,
+						new PointF(),
+						StringFormat.GenericDefault);
+
+					var workDayX = imagePadding.Left + this.GlobalPadding.Left;
+					var workDayY = imagePadding.Top + this.GlobalPadding.Top + daysShift;
+					var workDayWidth = image.Width
+					                   - imagePadding.Left - imagePadding.Right
+					                   - this.GlobalPadding.Left - this.GlobalPadding.Right;
+					var workDayHeight = (int)dayPrintedSize.Height;
+										//image.Height
+										//- imagePadding.Top - imagePadding.Bottom
+										//- this.GlobalPadding.Top - this.GlobalPadding.Bottom;
+
+					graphics.DrawString(
+						dayTextToPrint,
+						this.DayNameFont,
+						this.DayNameBrush,
+						new RectangleF(workDayX, workDayY, workDayWidth, workDayHeight));
+
+					// draw each event:
+					foreach (var scheduledEvent in workDay.Events)
+					{
+						var eventTimeTextToPrint = scheduledEvent.Start.ToShortTimeString();
+						var eventTitleTextToPrint = scheduledEvent.Title;
+
+						var eventTimePrintedSize = graphics.MeasureString(
+							eventTimeTextToPrint,
+							this.EventTimeFont,
+							new PointF(),
+							StringFormat.GenericDefault);
+						var eventTitlePrintedSize = graphics.MeasureString(
+							eventTitleTextToPrint,
+							this.EventTitleFont,
+							new PointF(),
+							StringFormat.GenericDefault);
+
+						var eventTimeX = workDayX + this.EventPadding.Left;
+						var eventTimeY = workDayY + this.EventPadding.Top + workDayHeight + eventsShift;
+						var eventTimeWidth = (int)(workDayWidth * 0.3);
+						var eventTimeHeight = (int)Math.Max(eventTimePrintedSize.Height, eventTitlePrintedSize.Height);
+						var eventTitleX = eventTimeX + eventTimeWidth;
+						var eventTitleY = eventTimeY;
+						var eventTitleWidth = workDayWidth - eventTimeWidth;
+						var eventTitleHeight = eventTimeHeight;
+
+						// draw event time:
+						graphics.DrawString(
+							eventTimeTextToPrint,
+							this.EventTimeFont,
+							this.EventTimeBrush,
+							new RectangleF(eventTimeX, eventTimeY, eventTimeWidth, eventTimeHeight));
+						
+						// draw event title:
+						graphics.DrawString(
+							eventTitleTextToPrint,
+							this.EventTitleFont,
+							this.EventTitleBrush,
+							new RectangleF(eventTitleX, eventTitleY, eventTitleWidth, eventTitleHeight));
+
+						eventsShift += eventTimeHeight + eventTimeHeight;
+					}
+
+					daysShift += workDayHeight + eventsShift;
+				}
+				
 			}
 		}
 	}

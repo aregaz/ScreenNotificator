@@ -39,5 +39,17 @@ namespace ScreenNotificator.Common.Models.Calendar
 				}
 			}
 		}
+
+		public void AddEvent(Event newEventToSchedule)
+		{
+			var theDay = this[newEventToSchedule.Start];
+			if (theDay == null)
+			{
+				this.days.Add(new WorkDay(newEventToSchedule.Start));
+				theDay = this[newEventToSchedule.Start];
+			}
+
+			theDay.AddEvent(newEventToSchedule);
+		}
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using ScreenNotificator.Common.Models;
+using ScreenNotificator.Common.Models.Calendar;
 
 namespace ScreenNotificator.Common
 {
@@ -30,6 +31,26 @@ namespace ScreenNotificator.Common
 
 				this.DrawText(graphics, text);
 			}
+		}
+
+
+		public NotificationCanvas(int width, int height, Schedule schedule)
+		{
+			this.Width = width;
+			this.Height = height;
+
+			this.Image = new Bitmap(width, height);
+
+			this.Padding = new ThickEdge(15);
+
+			using (var graphics = Graphics.FromImage(this.Image))
+			{
+				this.DrawBackground(graphics);
+				this.DrawModernBorder(graphics);
+			}
+
+			var schedulePrinter = new SchedulePrinter();
+			schedulePrinter.Print(schedule, this.Image, this.Padding);
 		}
 
 
