@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Xml.Schema;
 using ScreenNotificator.Common.Models;
 using ScreenNotificator.Common.Models.Calendar;
 
@@ -7,6 +8,8 @@ namespace ScreenNotificator.Common
 {
 	public class SchedulePrinter
 	{
+		private SchedulePropertiesFormatter schedulePropertiesFormatter = new SchedulePropertiesFormatter();
+
 		public Font DayNameFont { get; set; }
 		public Font EventTimeFont { get; set; }
 		public Font EventTitleFont { get; set; }
@@ -26,17 +29,17 @@ namespace ScreenNotificator.Common
 		public SchedulePrinter()
 			: this
 				(
-				new Font("Segoe UI", 17f, FontStyle.Bold),
-				new Font("Segoe UI", 17f),
-				new Font("Segoe UI", 17f),
-				new Font("Segoe UI", 17f),
-				new Font("Segoe UI", 17f),
+				new Font("Consolas", 17f, FontStyle.Bold),
+				new Font("Arial", 17f, FontStyle.Regular),
+				new Font(FontFamily.GenericSansSerif, 17f),
+				new Font("Segoe UI", 15f, FontStyle.Italic),
+				new Font("Consolas", 15f, FontStyle.Italic),
 
-				new SolidBrush(Color.Fuchsia),
-				new SolidBrush(Color.Fuchsia),
-				new SolidBrush(Color.Fuchsia),
-				new SolidBrush(Color.Fuchsia),
-				new SolidBrush(Color.Fuchsia)
+				new SolidBrush(Color.FromArgb(255, 134, 182, 160)),
+				new SolidBrush(Color.FromArgb(255, 34, 182, 160)),
+				new SolidBrush(Color.FromArgb(255, 234, 82, 160)),
+				new SolidBrush(Color.FromArgb(255, 234, 202, 16)),
+				new SolidBrush(Color.FromArgb(255, 234, 70, 60))
 				)
 		{
 
@@ -79,6 +82,9 @@ namespace ScreenNotificator.Common
 				imagePadding = new ThickEdge();
 			}
 
+			var imageAllowedWidth = image.Width - imagePadding.Left - imagePadding.Right;
+			var imageAllowedHeight = image.Height - imagePadding.Top - imagePadding.Bottom;
+
 			using (var graphics = Graphics.FromImage(image))
 			{
 				var daysShift = 0;
@@ -89,7 +95,7 @@ namespace ScreenNotificator.Common
 					eventsShift = 0;
 
 					// draw day title:
-					var dayTextToPrint = workDay.Date.ToLongDateString();
+					var dayTextToPrint = schedulePropertiesFormatter.GetDay(workDay);
 					var dayPrintedSize = graphics.MeasureString(
 						dayTextToPrint,
 						this.DayNameFont,
@@ -98,13 +104,8 @@ namespace ScreenNotificator.Common
 
 					var workDayX = imagePadding.Left + this.GlobalPadding.Left;
 					var workDayY = imagePadding.Top + this.GlobalPadding.Top + daysShift;
-					var workDayWidth = image.Width
-					                   - imagePadding.Left - imagePadding.Right
-					                   - this.GlobalPadding.Left - this.GlobalPadding.Right;
+					var workDayWidth = imageAllowedWidth - this.GlobalPadding.Left - this.GlobalPadding.Right;
 					var workDayHeight = (int)dayPrintedSize.Height;
-										//image.Height
-										//- imagePadding.Top - imagePadding.Bottom
-										//- this.GlobalPadding.Top - this.GlobalPadding.Bottom;
 
 					graphics.DrawString(
 						dayTextToPrint,
@@ -115,8 +116,10 @@ namespace ScreenNotificator.Common
 					// draw each event:
 					foreach (var scheduledEvent in workDay.Events)
 					{
-						var eventTimeTextToPrint = scheduledEvent.Start.ToShortTimeString();
+						var eventTimeTextToPrint = schedulePropertiesFormatter.GetEventTime(scheduledEvent);
 						var eventTitleTextToPrint = scheduledEvent.Title;
+						var eventDescriptionTextToPrint = (scheduledEvent.Description ?? string.Empty).Trim();
+						var eventLocationTextToPrint = schedulePropertiesFormatter.GetLocation(scheduledEvent);
 
 						var eventTimePrintedSize = graphics.MeasureString(
 							eventTimeTextToPrint,
@@ -138,13 +141,18 @@ namespace ScreenNotificator.Common
 						var eventTitleWidth = workDayWidth - eventTimeWidth;
 						var eventTitleHeight = eventTimeHeight;
 
+						var eventDescriptionX = eventTimeX;
+						var eventDescriptionY = eventTimeY + eventTimeHeight;
+						var eventDescritpionWidth = imageAllowedWidth - this.GlobalPadding.Left - this.GlobalPadding.Right;
+						var eventDescriptionHeight = 0;
+
 						// draw event time:
 						graphics.DrawString(
 							eventTimeTextToPrint,
 							this.EventTimeFont,
 							this.EventTimeBrush,
 							new RectangleF(eventTimeX, eventTimeY, eventTimeWidth, eventTimeHeight));
-						
+
 						// draw event title:
 						graphics.DrawString(
 							eventTitleTextToPrint,
@@ -152,12 +160,52 @@ namespace ScreenNotificator.Common
 							this.EventTitleBrush,
 							new RectangleF(eventTitleX, eventTitleY, eventTitleWidth, eventTitleHeight));
 
-						eventsShift += eventTimeHeight + eventTimeHeight;
+						// draw event description:
+						if (!string.IsNullOrWhiteSpace(eventDescriptionTextToPrint))
+						{
+							var eventDescriptionPrintedSize = graphics.MeasureString(
+								eventDescriptionTextToPrint,
+								this.EventDescriptionFont,
+								new SizeF(eventDescritpionWidth, float.MaxValue),
+								StringFormat.GenericDefault);
+
+							eventDescriptionHeight = (int)eventDescriptionPrintedSize.Height;
+
+							graphics.DrawString(
+								eventDescriptionTextToPrint,
+								this.EventDescriptionFont,
+								this.EventDescriptionBrush,
+								new RectangleF(eventDescriptionX, eventDescriptionY, eventDescritpionWidth, eventDescriptionHeight));
+						}
+
+						var eventLocationX = eventTimeX;
+						var eventLocationY = eventDescriptionY + eventDescriptionHeight;
+						var eventLocationWidth = eventDescritpionWidth;
+						var eventLocationHeight = 0;
+
+						// draw event location:
+						if (!string.IsNullOrWhiteSpace(eventLocationTextToPrint))
+						{
+							var eventLocationPrintedSize = graphics.MeasureString(
+								eventLocationTextToPrint,
+								this.EventLocationFont,
+								new SizeF(eventLocationWidth, float.MaxValue),
+								StringFormat.GenericDefault);
+
+							eventLocationHeight = (int)eventLocationPrintedSize.Height;
+
+							graphics.DrawString(
+								eventLocationTextToPrint,
+								this.EventLocationFont,
+								this.EventLocationBrush,
+								new RectangleF(eventLocationX, eventLocationY, eventLocationWidth, eventLocationHeight));
+						}
+
+						eventsShift += eventTimeHeight + eventDescriptionHeight + eventLocationHeight;
 					}
 
 					daysShift += workDayHeight + eventsShift;
 				}
-				
 			}
 		}
 	}
