@@ -8,7 +8,7 @@ namespace ScreenNotificator.Common
 {
 	public class SchedulePrinter
 	{
-		private SchedulePropertiesFormatter schedulePropertiesFormatter = new SchedulePropertiesFormatter();
+		private readonly SchedulePropertiesFormatter schedulePropertiesFormatter = new SchedulePropertiesFormatter();
 
 		public Font DayNameFont { get; set; }
 		public Font EventTimeFont { get; set; }
@@ -24,7 +24,10 @@ namespace ScreenNotificator.Common
 
 		public ThickEdge GlobalPadding { get; set; }
 		public ThickEdge DayTitlePadding { get; set; }
-		public ThickEdge EventPadding { get; set; }
+		public ThickEdge EventTimePadding { get; set; }
+		public ThickEdge EventDescriptionPadding { get; set; }
+		public ThickEdge EventLocationPadding { get; set; }
+		public ThickEdge WorkDayPadding { get; set; }
 
 		public SchedulePrinter()
 			: this
@@ -72,7 +75,10 @@ namespace ScreenNotificator.Common
 
 			this.GlobalPadding = new ThickEdge(15);
 			this.DayTitlePadding = new ThickEdge(bottom: 25);
-			this.EventPadding = new ThickEdge(left: 15, bottom: 5);
+			this.EventTimePadding = new ThickEdge(left: 35, bottom: 5);
+			this.EventDescriptionPadding = new ThickEdge(left: 50);
+			this.EventLocationPadding = new ThickEdge(left: 50);
+			this.WorkDayPadding = new ThickEdge(bottom: 15);
 		}
 
 		public void Print(Schedule schedule, Image image, ThickEdge imagePadding = null)
@@ -132,8 +138,8 @@ namespace ScreenNotificator.Common
 							new PointF(),
 							StringFormat.GenericDefault);
 
-						var eventTimeX = workDayX + this.EventPadding.Left;
-						var eventTimeY = workDayY + this.EventPadding.Top + workDayHeight + eventsShift;
+						var eventTimeX = workDayX + this.EventTimePadding.Left;
+						var eventTimeY = workDayY + this.EventTimePadding.Top + workDayHeight + eventsShift;
 						var eventTimeWidth = (int)(workDayWidth * 0.3);
 						var eventTimeHeight = (int)Math.Max(eventTimePrintedSize.Height, eventTitlePrintedSize.Height);
 						var eventTitleX = eventTimeX + eventTimeWidth;
@@ -141,9 +147,12 @@ namespace ScreenNotificator.Common
 						var eventTitleWidth = workDayWidth - eventTimeWidth;
 						var eventTitleHeight = eventTimeHeight;
 
-						var eventDescriptionX = eventTimeX;
+						var eventDescriptionX = eventTimeX + this.EventDescriptionPadding.Left;
 						var eventDescriptionY = eventTimeY + eventTimeHeight;
-						var eventDescritpionWidth = imageAllowedWidth - this.GlobalPadding.Left - this.GlobalPadding.Right;
+						var eventDescritpionWidth =
+							imageAllowedWidth
+							- this.GlobalPadding.Left - this.GlobalPadding.Right
+							- this.EventDescriptionPadding.Left;
 						var eventDescriptionHeight = 0;
 
 						// draw event time:
@@ -178,9 +187,9 @@ namespace ScreenNotificator.Common
 								new RectangleF(eventDescriptionX, eventDescriptionY, eventDescritpionWidth, eventDescriptionHeight));
 						}
 
-						var eventLocationX = eventTimeX;
+						var eventLocationX = eventTimeX + this.EventLocationPadding.Left;
 						var eventLocationY = eventDescriptionY + eventDescriptionHeight;
-						var eventLocationWidth = eventDescritpionWidth;
+						var eventLocationWidth = eventDescritpionWidth - this.EventLocationPadding.Left;
 						var eventLocationHeight = 0;
 
 						// draw event location:
@@ -204,7 +213,7 @@ namespace ScreenNotificator.Common
 						eventsShift += eventTimeHeight + eventDescriptionHeight + eventLocationHeight;
 					}
 
-					daysShift += workDayHeight + eventsShift;
+					daysShift += workDayHeight + eventsShift + this.WorkDayPadding.Bottom;
 				}
 			}
 		}
