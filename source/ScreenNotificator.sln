@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenNotificator.Common.Tests", "ScreenNotificator.Common.Tests\ScreenNotificator.Common.Tests.csproj", "{8F5DA647-4DFB-4821-A1F7-B2BEAF3B537F}"
 EndProject
 Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 3c7ad4d1-091f-48e0-95a4-1cf554ac509e
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

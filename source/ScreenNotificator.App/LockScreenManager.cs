@@ -8,7 +8,7 @@ namespace ScreenNotificator.App
 {
 	public class LockScreenManager
 	{
-		public static void ChangeLockScreenImage(string filePath)
+		public void ChangeLockScreenImage(string filePath)
 		{
 			var internalFilePath = FileManager.CopyExternalFileToAssemblyFolder(filePath);
 			
@@ -21,8 +21,10 @@ namespace ScreenNotificator.App
 
 			var originalImage = LockScreen.OriginalImageFile;
 
-			if (Path.GetFullPath(originalImage.AbsolutePath).ToLower()
-				 != Path.GetFullPath(internalFilePath).ToLower())
+			if (!string.Equals(
+				Path.GetFullPath(originalImage.AbsolutePath),
+				Path.GetFullPath(internalFilePath),
+				StringComparison.CurrentCultureIgnoreCase))
 			{
 				// lock screen image has not been chenged
 				throw new UnableToChangeLockScreenException();
