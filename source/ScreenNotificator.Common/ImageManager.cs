@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using ScreenNotificator.Common.Models;
 
 namespace ScreenNotificator.Common
@@ -20,20 +21,22 @@ namespace ScreenNotificator.Common
 
 		public static string ConvertImageToPng(string filePath, bool deleteOriginal = false)
 		{
+			string newFilePath;
+
 			using (var image = Image.FromFile(filePath))
 			{
-				var fileName = Path.GetFileName(filePath);
+				var fileName = Path.GetFileNameWithoutExtension(filePath);
 				var newFileName = string.Format("{0}.png", fileName);
-				var newFilePath = string.Format("{0}\\{1}", Path.GetDirectoryName(filePath), newFileName);
+				newFilePath = string.Format("{0}\\{1}", Path.GetDirectoryName(filePath), newFileName);
 				image.Save(newFilePath, ImageFormat.Png);
-
-				if (deleteOriginal)
-				{
-					File.Delete(filePath);
-				}
-
-				return newFilePath;
 			}
+
+			if (deleteOriginal)
+			{
+				File.Delete(filePath);
+			}
+
+			return newFilePath;
 		}
 	}
 }

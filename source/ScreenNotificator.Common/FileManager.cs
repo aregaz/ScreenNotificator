@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
+using ScreenNotificator.Common.Extensions;
 
 namespace ScreenNotificator.Common
 {
@@ -7,8 +10,8 @@ namespace ScreenNotificator.Common
 	{
 		public static string CopyExternalFileToAssemblyFolder(string externalFilePath, string internalFolder = null, string newFileName = null)
 		{
-			var originalFileName = Path.GetFileName(externalFilePath);
-			var originalFileExtension = Path.GetExtension(externalFilePath);
+			var originalFileName = Path.GetFileNameWithoutExtension(externalFilePath);
+			var originalFileExtension = Path.GetExtension(externalFilePath).ExtensionOnly();
 
 			if (string.IsNullOrWhiteSpace(newFileName))
 			{
@@ -35,7 +38,7 @@ namespace ScreenNotificator.Common
 			return internalFilePath;
 		}
 
-		public static string CopyFile(string filePath, string newFileName)
+		public static string CopyFile(string filePath, string newFileName, bool deleteDestinationFileIfExists = true)
 		{
 			if (!File.Exists(filePath))
 			{
@@ -43,7 +46,7 @@ namespace ScreenNotificator.Common
 			}
 
 			var originalFileDirectory = Path.GetDirectoryName(filePath);
-			var originalFileExtension = Path.GetExtension(filePath);
+			var originalFileExtension = Path.GetExtension(filePath).ExtensionOnly();
 
 			var destinationFilePath = string.Format(
 				"{0}\\{1}.{2}",
@@ -51,6 +54,17 @@ namespace ScreenNotificator.Common
 				newFileName,
 				originalFileExtension);
 
+			if (File.Exists(destinationFilePath))
+			{
+				if (deleteDestinationFileIfExists)
+				{
+					File.Delete(destinationFilePath);
+				}
+				else
+				{
+					throw new Exception("Unable to copy file. Destination file already exists");
+				}
+			}
 			File.Copy(filePath, destinationFilePath);
 
 			return destinationFilePath;

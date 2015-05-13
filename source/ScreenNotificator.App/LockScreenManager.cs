@@ -10,10 +10,13 @@ namespace ScreenNotificator.App
 	{
 		public void ChangeLockScreenImage(string filePath)
 		{
-			var internalFilePath = FileManager.CopyExternalFileToAssemblyFolder(filePath);
+			if (!IsFileInAssemblyFolder(filePath))
+			{
+				throw new Exception("LockScreen image file is not in the assembly folder.");
+			}
 			
 			var image = StorageFile
-				.GetFileFromPathAsync(internalFilePath)
+				.GetFileFromPathAsync(filePath)
 				.AsTask()
 				.Result;
 
@@ -23,12 +26,21 @@ namespace ScreenNotificator.App
 
 			if (!string.Equals(
 				Path.GetFullPath(originalImage.AbsolutePath),
-				Path.GetFullPath(internalFilePath),
+				Path.GetFullPath(filePath),
 				StringComparison.CurrentCultureIgnoreCase))
 			{
 				// lock screen image has not been chenged
 				throw new UnableToChangeLockScreenException();
 			}
+		}
+
+		private bool IsFileInAssemblyFolder(string filePath)
+		{
+			if (!File.Exists(filePath)) return false;
+
+			var assemblyFolder = FileManager.GetAssemblyFolder();
+
+			return filePath.StartsWith(assemblyFolder);
 		}
 	}
 }

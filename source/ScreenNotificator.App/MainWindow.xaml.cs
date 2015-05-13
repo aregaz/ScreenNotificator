@@ -82,11 +82,11 @@ namespace ScreenNotificator.App
 					MessageBoxImage.Error);
 			}
 
-			var image = ImageManager.LoadImage(filePath, this.screenResolution);
-			image.DrawNotificationArea();
+			//var image = ImageManager.LoadImage(filePath, this.screenResolution);
+			//image.DrawNotificationArea();
 
-			var imageFolder = string.Format("{0}\\Images", FileManager.GetAssemblyFolder());
-			image.SaveImage(imageFolder, "ScreenNotificatior.jpg");
+			//var imageFolder = string.Format("{0}\\Images", FileManager.GetAssemblyFolder());
+			//image.SaveImage(imageFolder, "ScreenNotificatior.jpg");
 		}
 	}
 }
