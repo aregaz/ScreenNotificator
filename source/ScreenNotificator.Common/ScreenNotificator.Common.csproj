@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\FileExtensions.cs" />
     <Compile Include="SchedulePropertiesFormatter.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="ImageEditor.cs" />

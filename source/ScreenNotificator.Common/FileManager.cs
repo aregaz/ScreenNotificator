@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Security.Cryptography;
-using ScreenNotificator.Common.Extensions;
 
 namespace ScreenNotificator.Common
 {
@@ -11,7 +9,7 @@ namespace ScreenNotificator.Common
 		public static string CopyExternalFileToAssemblyFolder(string externalFilePath, string internalFolder = null, string newFileName = null)
 		{
 			var originalFileName = Path.GetFileNameWithoutExtension(externalFilePath);
-			var originalFileExtension = Path.GetExtension(externalFilePath).ExtensionOnly();
+			var originalFileExtension = FileManager.GetExtensionFromFilePath(externalFilePath);
 
 			if (string.IsNullOrWhiteSpace(newFileName))
 			{
@@ -46,7 +44,7 @@ namespace ScreenNotificator.Common
 			}
 
 			var originalFileDirectory = Path.GetDirectoryName(filePath);
-			var originalFileExtension = Path.GetExtension(filePath).ExtensionOnly();
+			var originalFileExtension = FileManager.GetExtensionFromFilePath(filePath);
 
 			var destinationFilePath = string.Format(
 				"{0}\\{1}.{2}",
@@ -90,6 +88,14 @@ namespace ScreenNotificator.Common
 			}
 
 			return internalFolderPath;
+		}
+
+		private static string GetExtensionFromFilePath(string filePath)
+		{
+			return
+				File.Exists(filePath)
+					? Path.GetExtension(filePath).Replace(".", string.Empty)
+					: string.Empty;
 		}
 	}
 }
