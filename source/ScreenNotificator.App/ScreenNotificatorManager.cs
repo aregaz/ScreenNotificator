@@ -29,13 +29,13 @@ namespace ScreenNotificator.App
 			}
 
 			// 1) copy external image to internal folder. Name it as "original.ext"
-			var internalFilePath = FileManager.CopyExternalFileToAssemblyFolder(filePath, "Images", "original");
+			var internalOriginalFilePath = FileManager.CopyExternalFileToAssemblyFolder(filePath, "Images", "original");
 
 			// 1.5) convert it to PNG - "original.png"
-			internalFilePath = ImageManager.ConvertImageToPng(internalFilePath, true);
+			var internalPngFilePath = ImageManager.ConvertImageToPng(internalOriginalFilePath, false);
 			
 			// 2) add NotificationCanvas on internal message. Name result as "screen.ext"
-			var lockScreenImageFilePath = FileManager.CopyFile(internalFilePath, "lockScreen");
+			var lockScreenImageFilePath = FileManager.CopyFile(internalPngFilePath, "lockScreen");
 			var lockScreenImage = ImageManager.LoadImage(lockScreenImageFilePath, this.screenResolution);
 
 			// 2.5) draw NotificationArea based on schedule
@@ -52,6 +52,9 @@ namespace ScreenNotificator.App
 
 			// 3) set "screen.ext" as LockScreen image
 			this.lockScreenManager.ChangeLockScreenImage(lockScreenImageFilePath);
+
+			// 4) delete OriginalPng file
+			FileManager.DeleteFile(internalPngFilePath);
 		}
 
 		private Image GetPrintedSchedule(Schedule schedule)

@@ -68,6 +68,18 @@ namespace ScreenNotificator.Common
 			return destinationFilePath;
 		}
 
+		public static void DeleteFile(string filePath)
+		{
+			if (File.Exists(filePath))
+			{
+				File.Delete(filePath);
+			}
+			else
+			{
+				throw new Exception("Unable to copy file. Destination file already exists");
+			}
+		}
+
 		public static string GetAssemblyFolder()
 		{
 			var assembyPath = Assembly.GetExecutingAssembly().GetName().CodeBase;
