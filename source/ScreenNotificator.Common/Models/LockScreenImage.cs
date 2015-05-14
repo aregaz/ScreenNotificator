@@ -9,7 +9,9 @@ namespace ScreenNotificator.Common.Models
 		public string FilePath { get; set; }
 		public Image Image { get; set; }
 
+		public NotificationArea NotificationArea { get; set; }
 		public NotificationCanvas NotificationCanvas { get; set; }
+
 
 		public LockScreenImage(string filePath, ScreenResolution screenResolution)
 		{
@@ -20,12 +22,13 @@ namespace ScreenNotificator.Common.Models
 				image,
 				screenResolution.Width,
 				screenResolution.Height); ;
+
+			this.NotificationArea = new NotificationArea(this.Image.Width, this.Image.Height);
+			this.NotificationCanvas = new NotificationCanvas(this.NotificationArea.Width, this.NotificationArea.Height);
+
+			this.DrawNotificationArea();
 		}
 
-		public void DrawNotificationArea()
-		{
-			ImageEditor.DrawNotificationArea(this.Image);
-		}
 
 		public void SaveImage(string folder, string fileName = null)
 		{
@@ -39,9 +42,19 @@ namespace ScreenNotificator.Common.Models
 			this.Image.Save(filePath);
 		}
 
+
 		public void Dispose()
 		{
 			this.Image.Dispose();
+		}
+
+
+		private void DrawNotificationArea()
+		{
+			ImageEditor.DrawNotificationArea(
+				this.Image,
+				this.NotificationCanvas.Image,
+				new PointF(this.NotificationArea.X, this.NotificationArea.Y));
 		}
 	}
 }

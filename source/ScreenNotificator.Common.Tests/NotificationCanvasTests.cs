@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing.Imaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ScreenNotificator.Common.Models;
 using ScreenNotificator.Common.Models.Calendar;
 
 namespace ScreenNotificator.Common.Tests

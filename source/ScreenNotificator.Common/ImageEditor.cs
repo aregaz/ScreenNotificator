@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Drawing;
-using ScreenNotificator.Common.Models;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace ScreenNotificator.Common
 {
-	internal static class ImageEditor
+	public static class ImageEditor
 	{
-		internal static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+		public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
 		{
 			using (image)
 			{
@@ -27,19 +28,32 @@ namespace ScreenNotificator.Common
 			}
 		}
 
-		internal static void DrawNotificationArea(Image bmp)
+		public static void DrawNotificationArea(Image canvas, Image notificationAreaImage, PointF startPosition)
 		{
-			using (var graphics = Graphics.FromImage(bmp))
+			using (var graphics = Graphics.FromImage(canvas))
 			{
-				var notificationArea = new NotificationArea(bmp.Width, bmp.Height);
-				var notificationCanvas = new NotificationCanvas(
-					notificationArea.Width,
-					notificationArea.Height,
-					"Тут будуть ваші події для нагадування");
-				graphics.DrawImage(
-					notificationCanvas.Image,
-					new PointF(notificationArea.X, notificationArea.Y));
+				graphics.DrawImage(notificationAreaImage, startPosition);
 			}
+		}
+
+		public static string ConvertImageToPng(string filePath, bool deleteOriginal = false)
+		{
+			string newFilePath;
+
+			using (var image = Image.FromFile(filePath))
+			{
+				var fileName = Path.GetFileNameWithoutExtension(filePath);
+				var newFileName = string.Format("{0}.png", fileName);
+				newFilePath = string.Format("{0}\\{1}", Path.GetDirectoryName(filePath), newFileName);
+				image.Save(newFilePath, ImageFormat.Png);
+			}
+
+			if (deleteOriginal)
+			{
+				File.Delete(filePath);
+			}
+
+			return newFilePath;
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using ScreenNotificator.Common;
 using ScreenNotificator.Common.Models;
@@ -32,23 +31,27 @@ namespace ScreenNotificator.App
 			var internalOriginalFilePath = FileManager.CopyExternalFileToAssemblyFolder(filePath, "Images", "original");
 
 			// 1.5) convert it to PNG - "original.png"
-			var internalPngFilePath = ImageManager.ConvertImageToPng(internalOriginalFilePath, false);
+			var internalPngFilePath = ImageEditor.ConvertImageToPng(internalOriginalFilePath, false);
 			
 			// 2) add NotificationCanvas on internal message. Name result as "screen.ext"
 			var lockScreenImageFilePath = FileManager.CopyFile(internalPngFilePath, "lockScreen");
-			var lockScreenImage = ImageManager.LoadImage(lockScreenImageFilePath, this.screenResolution);
+			var lockScreenImage =
+				new LockScreenImage(filePath, this.screenResolution);
+				//ImageManager.LoadImage(lockScreenImageFilePath, this.screenResolution);
 
 			// 2.5) draw NotificationArea based on schedule
-			////lockScreenImage.DrawNotificationArea();
 			var notificationAreaImage = this.GetPrintedSchedule(schedule);
 			using (var graphics = Graphics.FromImage(lockScreenImage.Image))
 			{
 				graphics.DrawImage(
 					notificationAreaImage,
-					this.notificationArea.X,
-					this.notificationArea.Y);
+					lockScreenImage.NotificationArea.X, //this.notificationArea.X,
+					lockScreenImage.NotificationArea.Y); //this.notificationArea.Y);
 			}
-			lockScreenImage.SaveImage(Path.GetDirectoryName(lockScreenImageFilePath));
+
+			lockScreenImage.SaveImage(
+				Path.GetDirectoryName(lockScreenImageFilePath),
+				Path.GetFileName(lockScreenImageFilePath));
 
 			// 3) set "screen.ext" as LockScreen image
 			this.lockScreenManager.ChangeLockScreenImage(lockScreenImageFilePath);

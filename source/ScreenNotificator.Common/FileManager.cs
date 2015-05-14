@@ -6,7 +6,10 @@ namespace ScreenNotificator.Common
 {
 	public class FileManager
 	{
-		public static string CopyExternalFileToAssemblyFolder(string externalFilePath, string internalFolder = null, string newFileName = null)
+		public static string CopyExternalFileToAssemblyFolder(
+			string externalFilePath,
+			string internalFolder = null,
+			string newFileName = null)
 		{
 			var originalFileName = Path.GetFileNameWithoutExtension(externalFilePath);
 			var originalFileExtension = FileManager.GetExtensionFromFilePath(externalFilePath);
