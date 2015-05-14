@@ -1,10 +1,9 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using ScreenNotificator.Common.Models;
 using ScreenNotificator.Common.Models.Calendar;
 
-namespace ScreenNotificator.Common
+namespace ScreenNotificator.Common.Models
 {
 	public class NotificationCanvas
 	{
@@ -12,10 +11,10 @@ namespace ScreenNotificator.Common
 		public int Height { get; private set; }
 
 		public Image Image { get; set; }
-
 		public ThickEdge Padding { get; set; }
 
-		public NotificationCanvas(int width, int height, string text)
+
+		public NotificationCanvas(int width, int height, string text = null)
 		{
 			this.Width = width;
 			this.Height = height;
@@ -29,7 +28,7 @@ namespace ScreenNotificator.Common
 				this.DrawBackground(graphics);
 				this.DrawModernBorder(graphics);
 
-				this.DrawText(graphics, text);
+				if (!string.IsNullOrWhiteSpace(text)) this.DrawText(graphics, text);
 			}
 		}
 
@@ -63,7 +62,7 @@ namespace ScreenNotificator.Common
 		private void DrawBackground(Graphics graphics)
 		{
 			//var backgroundBrush = new SolidBrush(Color.FromArgb(128, 239, 241, 246));
-			var backgroundBrush = new SolidBrush(Color.White);
+			var backgroundBrush = new SolidBrush(Color.FromArgb(200, 255, 255, 255));
 
 			var background = new Rectangle(0, 0, this.Image.Width, this.Image.Height);
 			graphics.FillRectangle(backgroundBrush, background);
@@ -79,6 +78,7 @@ namespace ScreenNotificator.Common
 				new SolidBrush(Color.Black),
 				startPoint);
 		}
+
 
 		private void DrawModernBorder(Graphics graphics)
 		{

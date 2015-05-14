@@ -61,7 +61,6 @@
     <Compile Include="SchedulePropertiesFormatter.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="ImageEditor.cs" />
-    <Compile Include="ImageManager.cs" />
     <Compile Include="Models\Calendar\Event.cs" />
     <Compile Include="Models\LockScreenImage.cs" />
     <Compile Include="Models\NotificationArea.cs" />
@@ -69,7 +68,7 @@
     <Compile Include="SchedulePrinter.cs" />
     <Compile Include="Models\ThickEdge.cs" />
     <Compile Include="Models\Calendar\WorkDay.cs" />
-    <Compile Include="NotificationCanvas.cs" />
+    <Compile Include="Models\NotificationCanvas.cs" />
     <Compile Include="Models\ScreenResolution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
