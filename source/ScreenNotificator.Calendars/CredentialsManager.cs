@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Xml.Linq;
 
 namespace ScreenNotificator.Calendars
 {
@@ -15,10 +19,21 @@ namespace ScreenNotificator.Calendars
 				fileName = "ProviderDetails.xml";
 			}
 
-			var providerDetailsXml = new XmlDocument();
-			providerDetailsXml.Load(fileName);
+			var xml = XElement.Load(fileName);
 
-			var credentials = new Credentials("", "");
+			var provider = xml
+				.Elements("provider")
+				.SingleOrDefault(p => p.Attribute("name").Value == providerName);
+
+			if (provider == null)
+			{
+				throw new ArgumentException(string.Format("OAuth credentials for provider {0} not found.", providerName), providerName);
+			}
+			
+			var credentials = new Credentials(
+				providerName,
+				provider.Descendants("clientID").SingleOrDefault().Value,
+				provider.Descendants("secret").SingleOrDefault().Value);
 			return credentials;
 		}
 	}
