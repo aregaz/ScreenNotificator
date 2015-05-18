@@ -126,6 +126,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ScreenNotificator.Calendars\ScreenNotificator.Calendars.csproj">
+      <Project>{1e3c5112-05fe-4dc3-a333-368ebb001226}</Project>
+      <Name>ScreenNotificator.Calendars</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScreenNotificator.Common\ScreenNotificator.Common.csproj">
       <Project>{6593bda3-ac16-4a1c-ba72-f105faf2715d}</Project>
       <Name>ScreenNotificator.Common</Name>

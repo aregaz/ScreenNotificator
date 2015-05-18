@@ -9,10 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenNotificator.Common", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenNotificator.Common.Tests", "ScreenNotificator.Common.Tests\ScreenNotificator.Common.Tests.csproj", "{8F5DA647-4DFB-4821-A1F7-B2BEAF3B537F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenNotificator.Calendars", "ScreenNotificator.Calendars\ScreenNotificator.Calendars.csproj", "{1E3C5112-05FE-4DC3-A333-368EBB001226}"
+EndProject
 Global
-	GlobalSection(CodealikeProperties) = postSolution
-		SolutionGuid = 3c7ad4d1-091f-48e0-95a4-1cf554ac509e
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -55,8 +54,21 @@ Global
 		{8F5DA647-4DFB-4821-A1F7-B2BEAF3B537F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8F5DA647-4DFB-4821-A1F7-B2BEAF3B537F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8F5DA647-4DFB-4821-A1F7-B2BEAF3B537F}.Release|x64.ActiveCfg = Release|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1E3C5112-05FE-4DC3-A333-368EBB001226}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 3c7ad4d1-091f-48e0-95a4-1cf554ac509e
 	EndGlobalSection
 EndGlobal

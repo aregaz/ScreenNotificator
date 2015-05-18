@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<providers>
+	<provider name="Google">
+		<clientID>place your client id here</clientID>
+		<secret>place your secret key here</secret>
+		<redirectUrl>http://localhost</redirectUrl>
+	</provider>
+</providers>
