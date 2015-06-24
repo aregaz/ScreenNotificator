@@ -72,6 +72,9 @@
     <Compile Include="Models\NotificationCanvas.cs" />
     <Compile Include="Models\ScreenResolution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserSettings\ISettingsModule.cs" />
+    <Compile Include="UserSettings\ScreenNotificatorSettings.cs" />
+    <Compile Include="UserSettings\SettingsModule.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
