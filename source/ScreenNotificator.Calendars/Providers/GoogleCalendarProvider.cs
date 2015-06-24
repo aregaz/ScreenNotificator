@@ -33,7 +33,7 @@ namespace ScreenNotificator.Calendars.Providers
 
 			using (var stream = new FileStream("client_secret.json", FileMode.Open, FileAccess.Read))
 			{
-				var credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+				var credPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 				credPath = Path.Combine(credPath, ".credentials");
 
 				credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
