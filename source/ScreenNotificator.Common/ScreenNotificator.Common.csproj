@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\FilePathHelper.cs" />
     <Compile Include="SchedulePropertiesFormatter.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="ImageEditor.cs" />

@@ -10,6 +10,7 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using ScreenNotificator.Calendars.Models;
+using ScreenNotificator.Common.Helpers;
 
 namespace ScreenNotificator.Calendars.Providers
 {
@@ -89,8 +90,7 @@ namespace ScreenNotificator.Calendars.Providers
 
 			using (var stream = new FileStream("client_secret.json", FileMode.Open, FileAccess.Read))
 			{
-				var credPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-				credPath = Path.Combine(credPath, ".credentials");
+				var credPath = FilePathHelper.GetSpecialFolder();
 
 				credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
 					GoogleClientSecrets.Load(stream).Secrets,
