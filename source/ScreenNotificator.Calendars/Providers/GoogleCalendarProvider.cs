@@ -4,13 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Documents;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using ScreenNotificator.Calendars.Models;
 using ScreenNotificator.Common.Helpers;
+using GoogleModels = Google.Apis.Calendar.v3.Data;
+using ScreenNotificatiorModels = ScreenNotificator.Calendars.Models;
 
 namespace ScreenNotificator.Calendars.Providers
 {
@@ -47,9 +48,35 @@ namespace ScreenNotificator.Calendars.Providers
 			return result;
 		}
 
-		public IEnumerable<string> GetEventsFromCalendar(IEnumerable<string> calendarIDs, DateTime startDate, DateTime? endDate)
+
+		public IEnumerable<ScreenNotificatiorModels.Event> GetEventsFromCalendars(IEnumerable<string> calendarIDs, DateTime startDate, DateTime? endDate)
 		{
-			throw new NotImplementedException();
+			var events = new List<GoogleModels.Event>();
+
+			foreach (var calendarID in calendarIDs)
+			{
+				var request = GoogleCalendarProvider.GoogleCalendatService.Events.List(calendarID);
+				request.TimeMin = startDate;
+				request.TimeMax = endDate;
+				request.ShowDeleted = false;
+
+				var calendarEvents = request.Execute();
+				if (calendarEvents.Items.Count > 0)
+				{
+					events.AddRange(calendarEvents.Items);
+				}
+            }
+
+			return events
+				.Select(e => new ScreenNotificatiorModels.Event()
+				{
+					ID = e.Id,
+					Name = e.Summary,
+					Description = e.Description,
+					Start = GetDateTime(e.Start),
+					End = GetDateTime(e.End)
+				})
+				.ToList();
 		}
 
 		public void Do()
@@ -110,6 +137,29 @@ namespace ScreenNotificator.Calendars.Providers
 			});
 
 			GoogleCalendarProvider.GoogleCalendatService = service;
+		}
+
+		private DateTime GetDateTime(GoogleModels.EventDateTime googleDate)
+		{
+			if (googleDate.DateTime.HasValue)
+			{
+				return googleDate.DateTime.Value;
+			}
+
+			if (!string.IsNullOrWhiteSpace(googleDate.Date))
+			{
+				return DateTime.Parse(googleDate.Date);
+			}
+
+			DateTime result;
+			if (DateTime.TryParse(googleDate.DateTimeRaw, out result))
+			{
+				return result;
+			}
+			else
+			{
+				throw new InvalidCastException();
+			}
 		}
 	}
 }

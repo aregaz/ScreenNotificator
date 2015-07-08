@@ -7,6 +7,6 @@ namespace ScreenNotificator.Calendars.Providers
 	public interface ICalendarProvider
 	{
 		IEnumerable<Calendar> GetCalendarList();
-		IEnumerable<string> GetEventsFromCalendar(IEnumerable<string> calendarIDs, DateTime startDate, DateTime? endDate);
+		IEnumerable<Event> GetEventsFromCalendars(IEnumerable<string> calendarIDs, DateTime startDate, DateTime? endDate);
 	}
 }

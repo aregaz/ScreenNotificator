@@ -26,5 +26,16 @@ namespace ScreenNotificator.Calendars.Tests
 
 			Assert.IsTrue(calendars.Any());
 		}
+
+
+		[TestMethod]
+		public void GetEventsFromCalendars__Success()
+		{
+			var provider = new GoogleCalendarProvider();
+			var calendars = provider.GetCalendarList();
+			var events = provider.GetEventsFromCalendars(new[] { calendars.First().ID }, DateTime.Now.AddDays(-1), DateTime.Now);
+
+			Assert.IsNotNull(events);
+		}
 	}
 }
