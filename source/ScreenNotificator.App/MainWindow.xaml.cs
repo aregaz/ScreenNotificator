@@ -6,6 +6,7 @@ using System.Windows;
 using ScreenNotificator.Common;
 using ScreenNotificator.Common.Models;
 using ScreenNotificator.Common.Models.Calendar;
+using System.Linq;
 
 namespace ScreenNotificator.App
 {
@@ -48,27 +49,29 @@ namespace ScreenNotificator.App
 				//lockScreenManager.ChangeLockScreenImage(filePath);
 
 				var now = DateTime.Now;
-				var schedule = new Schedule();
-				schedule.AddEvent(new Event()
-				{
-					Start = now,
-					Title = "Test 1",
-					Description = "Test description one"
-				});
-				schedule.AddEvent(new Event()
-				{
-					Start = now.AddHours(2),
-					Title = "Test 2",
-					Description = "This is long description. Lorem ipsum and further text. Bla-bla-bla. More text.",
-					Location = "Home"
-				});
-				schedule.AddEvent(new Event()
-				{
-					Start = now.AddDays(1),
-					Title = "Test 3",
-					Description = null,
-					Location = "Office"
-				});
+				var schedule = LoadScheduleFromGoogleCalendar();
+				//schedule.AddEvent(new Event()
+				//{
+				//	Start = now,
+				//	Title = "Test 1",
+				//	Description = "Test description one"
+				//});
+				//schedule.AddEvent(new Event()
+				//{
+				//	Start = now.AddHours(2),
+				//	Title = "Test 2",
+				//	Description = "This is long description. Lorem ipsum and further text. Bla-bla-bla. More text.",
+				//	Location = "Home"
+				//});
+				//schedule.AddEvent(new Event()
+				//{
+				//	Start = now.AddDays(1),
+				//	Title = "Test 3",
+				//	Description = null,
+				//	Location = "Office"
+				//});
+
+
 
 				var manager = new ScreenNotificatorManager(this.screenResolution);
 				manager.UpdateLockScreen(filePath, schedule);
@@ -87,6 +90,32 @@ namespace ScreenNotificator.App
 
 			//var imageFolder = string.Format("{0}\\Images", FileManager.GetAssemblyFolder());
 			//image.SaveImage(imageFolder, "ScreenNotificatior.jpg");
+		}
+
+
+		private Schedule LoadScheduleFromGoogleCalendar()
+		{
+			var schedule = new Schedule();
+
+			var calendarProvider = new ScreenNotificator.Calendars.Providers.GoogleCalendarProvider();
+			var calendars = calendarProvider.GetCalendarList();
+			var events = calendarProvider.GetEventsFromCalendars(
+				new[] { calendars.First().ID },
+				DateTime.Now.AddDays(-1),
+				DateTime.Now);
+
+			foreach (var calendarEvent in events)
+			{
+				schedule.AddEvent(new Event()
+				{
+					Title = calendarEvent.Name,
+					Start = calendarEvent.Start,
+					End = calendarEvent.End,
+					Description = calendarEvent.Description
+				});
+			}
+
+			return schedule;
 		}
 	}
 }
