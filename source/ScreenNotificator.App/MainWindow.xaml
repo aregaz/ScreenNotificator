@@ -1,9 +1,30 @@
-﻿<Window x:Class="ScreenNotificator.App.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="93.2" Width="201.8">
-	<Grid>
-		<Button x:Name="SelectImageButton" Content="Open image" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="109" Click="SelectImageButton_Click"/>
+﻿<Window x:Name="ScreenNotificator"
+		x:Class="ScreenNotificator.App.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Title="Screen Notificator"
+		Height="150"
+		Width="380"
+		WindowStartupLocation="CenterScreen"
+		BorderBrush="Black"
+		ResizeMode="NoResize"
+		HorizontalContentAlignment="Stretch">
+
+	<Grid HorizontalAlignment="Right"
+		  Margin="0,10,6.6,9.8"
+		  Width="357">
+		<Button x:Name="SelectImageButton"
+				Content="Choose image"
+				HorizontalAlignment="Left"
+				Margin="10,72,0,0"
+				VerticalAlignment="Top"
+				Width="109"
+				Click="SelectImageButton_Click" />
+		<Image x:Name="googleConnectionStatusImage"
+			   Height="20"
+			   Width="20"
+			   Margin="327,0,10,71">
+		</Image>
 
 	</Grid>
 </Window>

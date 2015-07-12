@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Windows;
 
 using ScreenNotificator.Common;
+using ScreenNotificator.Calendars.Providers;
 using ScreenNotificator.Common.Models;
 using ScreenNotificator.Common.Models.Calendar;
 using System.Linq;
+using System.Windows.Media.Imaging;
 
 namespace ScreenNotificator.App
 {
@@ -17,10 +19,15 @@ namespace ScreenNotificator.App
 	{
 		private readonly OpenFileDialog openFileDialog;
 		private readonly ScreenResolution screenResolution;
+		private readonly GoogleCalendarProvider googleCalendarProvider;
 
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			googleCalendarProvider = new GoogleCalendarProvider();
+
+			CheckGoogleCalendarProviderConnection();
 
 			openFileDialog = new OpenFileDialog();
 			openFileDialog.FileOk += NewImageSelected;
@@ -91,15 +98,13 @@ namespace ScreenNotificator.App
 			//var imageFolder = string.Format("{0}\\Images", FileManager.GetAssemblyFolder());
 			//image.SaveImage(imageFolder, "ScreenNotificatior.jpg");
 		}
-
-
+		
 		private Schedule LoadScheduleFromGoogleCalendar()
 		{
 			var schedule = new Schedule();
 
-			var calendarProvider = new ScreenNotificator.Calendars.Providers.GoogleCalendarProvider();
-			var calendars = calendarProvider.GetCalendarList();
-			var events = calendarProvider.GetEventsFromCalendars(
+			var calendars = googleCalendarProvider.GetCalendarList();
+			var events = googleCalendarProvider.GetEventsFromCalendars(
 				new[] { calendars.First().ID },
 				DateTime.Now.AddDays(-1),
 				DateTime.Now);
@@ -117,5 +122,16 @@ namespace ScreenNotificator.App
 
 			return schedule;
 		}
+
+		private void CheckGoogleCalendarProviderConnection()
+		{
+			var isConnected = googleCalendarProvider.IsAuthorized();
+			var imageSoource = new Uri(
+				string.Format(@"/ScreenNotificator.App;component/Resources/{0}.png", isConnected ? "Connected" : "Disconnected"),
+				UriKind.Relative);			
+
+			this.googleConnectionStatusImage.Source = new BitmapImage(imageSoource);
+
+        }
 	}
 }

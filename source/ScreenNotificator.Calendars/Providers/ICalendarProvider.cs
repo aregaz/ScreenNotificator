@@ -6,6 +6,7 @@ namespace ScreenNotificator.Calendars.Providers
 {
 	public interface ICalendarProvider
 	{
+		bool IsAuthorized();
 		IEnumerable<Calendar> GetCalendarList();
 		IEnumerable<Event> GetEventsFromCalendars(IEnumerable<string> calendarIDs, DateTime startDate, DateTime? endDate);
 	}

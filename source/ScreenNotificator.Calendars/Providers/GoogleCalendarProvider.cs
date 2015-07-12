@@ -22,9 +22,16 @@ namespace ScreenNotificator.Calendars.Providers
 
 		private static CalendarService GoogleCalendatService { get; set; }
 
+
 		public GoogleCalendarProvider()
 		{
 			this.Initialize();
+		}
+
+
+		public bool IsAuthorized()
+		{
+			return true;
 		}
 
 
@@ -79,6 +86,7 @@ namespace ScreenNotificator.Calendars.Providers
 				.ToList();
 		}
 
+
 		public void Do()
 		{
 			// Define parameters of request.
@@ -111,6 +119,7 @@ namespace ScreenNotificator.Calendars.Providers
 			}
 		}
 
+
 		private void Initialize()
 		{
 			UserCredential credential;
@@ -138,6 +147,7 @@ namespace ScreenNotificator.Calendars.Providers
 
 			GoogleCalendarProvider.GoogleCalendatService = service;
 		}
+
 
 		private DateTime GetDateTime(GoogleModels.EventDateTime googleDate)
 		{
